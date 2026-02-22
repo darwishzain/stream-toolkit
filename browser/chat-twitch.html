@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Twitch Chat for OBS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="./tmi.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <script type="text/javascript" src="./getconfig.js"></script>
+</head>
+<body>
+    <div id="twitchchat"></div>
+    <script>
+        
+        function tmichat(){
+            if(!user) return;
+            // Set your channel name here
+
+            const channelName = user.username;
+            const client = new tmi.Client({
+                channels: [ channelName ]
+            });
+
+            const twitchchat = document.getElementById('twitchchat');
+            client.on('message', (channel, tags, message, self) => {
+                const div = document.createElement('div');
+                div.className = 'twitchchatmessage';
+                div.innerHTML = `<span class="twitchchatuser">${tags['display-name']}:</span> ${message}`;
+                twitchchat.appendChild(div);
+                if (twitchchat.children.length > 50) {
+                    twitchchat.removeChild(twitchchat.firstChild);
+                }
+                // Auto-scroll to bottom
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+
+            client.connect();
+        }
+    </script>
+</body>
+</html>

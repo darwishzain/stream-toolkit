@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { margin: 0; overflow: hidden; background: transparent; }
+        #container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 30px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 15px;
+            border: 2px solid #fff;
+        }
+        #bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff00cc, #3333ff);
+            border-radius: 13px;
+            transition: width 0.3s ease;
+        }
+        #label {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            line-height: 30px;
+            text-shadow: 1px 1px 2px black;
+        }
+    </style>
+</head>
+<body>
+<!--     <button id="startBtn" style="position:fixed; top:10; left:10; z-index:999; padding:10px;">
+        Click to Enable Mic
+    </button> -->
+
+    <div id="container">
+        <div id="bar"></div>
+        <div id="label">MOMENTUM: 0%</div>
+    </div>
+    <script>
+        let momentum = 0;
+const bar = document.getElementById('bar');
+const label = document.getElementById('label');
+
+async function startMomentum() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const audioContext = new AudioContext();
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyzer = audioContext.createAnalyser();
+    analyzer.fftSize = 256;
+    source.connect(analyzer);
+
+    const dataArray = new Uint8Array(analyzer.frequencyBinCount);
+
+    function update() {
+        analyzer.getByteFrequencyData(dataArray);
+        let volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
+
+        // Logic: If volume is above a threshold, increase momentum
+        if (volume > 30) { 
+            momentum += 0.5; 
+        } else {
+            momentum -= 0.1; // Slowly drain if silent
+        }
+
+        // Keep momentum between 0 and 100
+        momentum = Math.max(0, Math.min(100, momentum));
+
+        // Update UI
+        bar.style.width = momentum + "%";
+        label.innerText = `MOMENTUM: ${Math.floor(momentum)}%`;
+
+        if (momentum >= 100) {
+            triggerHype();
+        }
+
+        requestAnimationFrame(update);
+    }
+    update();
+}
+
+function triggerHype() {
+    label.innerText = "🔥 HYPE ACHIEVED! 🔥";
+    momentum = 0; // Reset
+    // You can add a sound effect or confetti here!
+}
+
+startMomentum();
+    </script>
+</body>
+</html>

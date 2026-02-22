@@ -1,0 +1,11 @@
+assets/images/*
+assets/audios/*
+
+!assets/images/.gitkeep
+!assets/audios/.gitkeep
+
+node_modules
+user.json
+
+.env
+venv

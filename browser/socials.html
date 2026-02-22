@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <script type="text/javascript" src="./getconfig.js"></script>
+    <title>Social Media Overlay</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body>
+    <div id="socialcontainer">
+        <div id="socialbox">
+            <span id="sociallabel">FOLLOW</span>
+            <span id="socialusername">@YourHandle</span>
+            <!-- <span> <i id="socialicon" class="bi bi-plus-square-fill"></i></span> -->
+        </div>
+    </div>
+    <script>
+        function socialrotation(){
+            if(!user) return;
+            document.getElementById('socialusername').innerText = '@' + user.username;
+            const platforms = ["TIKTOK", "INSTAGRAM", "YOUTUBE", "DAUN"];
+            //const icons = ["bi bi-tiktok", "bi bi-instagram", "bi bi-youtube", "bi bi-leaf-fill"];
+            let index = 0;
+            setInterval(() => {
+                index = (index + 1) % platforms.length;
+                document.getElementById('sociallabel').innerText = platforms[index] ;
+                //document.getElementById('socialicon').className = icons[index];
+            }, 10000);
+        }
+    </script>
+</body>
+</html>

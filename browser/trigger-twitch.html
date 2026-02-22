@@ -1,0 +1,69 @@
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/comfy.js@latest/dist/comfy.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <script type="text/javascript" src="./getconfig.js"></script>
+    <title>Trigger Twitch Alerts</title>
+</head>
+<body>
+    <div id="alert-container">
+        <div id="hype"></div>
+        <h1 id="alert-text"></h1>
+        <h1 id="alert-box"></h1>
+    </div>
+    <script>
+        const alertText = document.getElementById("alert-text");
+        const alertBox = document.getElementById("alert-box");
+        count = 0;
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "h" || e.key === "H") {
+                console.log("Manual Test Triggered");
+                triggerHype("White"); // Calls your existing function
+            }
+            else if (e.key === "a" || e.key === "A") {
+                console.log("Manual Arrived Triggered");
+                arrived("Orange"+count); // Calls your existing function
+                count += 1;
+            }
+        });
+        ComfyJS.onCommand = (user, command, message, flags, extra) => {
+            if (command === "hype") {
+                triggerHype(user);
+            }
+        };
+        ComfyJS.onJoin = (user, extra) => {
+            arrived(user);
+        };
+        
+        function arrived(user){
+            const newcomer = document.createElement("div");
+            newcomer.innerText = `${user} has arrived!`;
+            newcomer.classList.add("arrivedalert");
+            const randomTop = Math.floor(Math.random()*50)+25;
+            newcomer.style.top = `${randomTop}%`;
+            document.getElementById("alert-box").appendChild(newcomer);
+            setTimeout(() => {
+                newcomer.remove();
+            }, 3000);
+        }
+        function triggerHype(user) {
+            const hypealert = document.createElement("h1");
+            hypealert.innerText = `@${user} IS HYPED!`;
+            document.getElementById("hype").appendChild(hypealert);
+
+            //alertText.innerText = `@${user} IS HYPED!`;
+            //alertText.classList.add("show");
+
+            // Hide it again after 3 seconds
+            setTimeout(() => {
+                //alertText.classList.remove("show");
+                hypealert.remove();
+            }, 3000);
+        }
+        function initcomfy() {
+            if (user && user.username) {
+                ComfyJS.Init(user.username); // This is the "Power Button"
+            }
+        }
+    </script>
+</body>

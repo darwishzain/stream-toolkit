@@ -1,0 +1,120 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0); /* Transparent */
+    font-family: 'Inter', sans-serif;
+}
+:root {
+    --bg-color: #18181b;
+    --text-color: #efeff1;
+    --user-color: #bf94ff;
+    --accent-color: #00ffcc;
+}
+
+/* Light Theme overrides */
+[data-theme="light"] {
+    --bg-color: #f7f7f8;
+    --text-color: #1f1f23;
+    --user-color: #9146FF; /* Signature Twitch purple */
+    --accent-color: #9146FF; /* Signature Twitch purple */
+}
+.twitchchatmessage{
+    padding: 2px 5px;
+    width: 80%;
+    margin: 5px auto;
+    border-radius:5px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.twitchchatuser {
+    font-weight: bold;
+    color: var(--accent-color);
+}
+/*SOCIALS*/
+#socialcontainer {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+}
+#socialicon{
+    color:var(--accent-color);
+}
+#socialbox {
+    background: var(--bg-color); 
+    color: var(--accent-color);
+    padding: 10px 20px;
+    border-left: 5px solid var(--accent-color); /* Bright accent color */
+    border-radius: 4px;
+    font-size: 24px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    animation: slideIn 1s ease-out;
+}
+
+#sociallabel {
+    color: var(--text-color);
+    margin-right: 10px;
+}
+
+/* Smooth entry animation */
+@keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+/**TRIGGER*/
+#alert-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    font-family: 'Arial Black', sans-serif;
+    color: var(--accent-color);
+    text-shadow: 0 0 20px var(--bg-color);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#alert-text.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+}
+#trigger{
+    color: var(--accent-color);
+}
+.triggermessage{
+    color: var(--text-color);
+}
+.arrivedalert {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Arial Black', sans-serif;
+    color: var(--accent-color);
+    font-size: 2rem;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+    pointer-events: none; /* Make sure it doesn't block clicks */
+    /* The Animation */
+    animation: floatUp 4s ease-out forwards;
+}
+
+@keyframes floatUp {
+    0% { opacity: 0; transform: translate(-50%, 20px); }
+    10% { opacity: 1; transform: translate(-50%, 0); }
+    90% { opacity: 1; transform: translate(-50%, -50px); }
+    100% { opacity: 0; transform: translate(-50%, -100px); }
+}
+
+.chat-message {
+    position: relative;
+    font-family: 'Arial Black', sans-serif;
+    background: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
+    color: #ffffff;
+    padding: 8px 12px;
+    margin: 5px 0;
+    border-radius: 5px;
+    font-size: 1rem;
+    max-width: 300px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    animation: fadeInUp 0.5s ease-out;
+}

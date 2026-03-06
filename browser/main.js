@@ -11,6 +11,8 @@ async function loadconfig() {
         //} else {
         //    document.documentElement.setAttribute('data-theme', 'dark');
         //}
+        const activetheme = user.theme || 'default';
+        document.body.setAttribute('th-theme',activetheme);
         if(typeof socialrotation == "function")
         {
             socialrotation();

@@ -1,23 +1,75 @@
+/**THEME*/
+/**Midnight*/
+:root, [th-theme="default"], [th-theme=""], [th-theme="midnight"] {
+  --th-bg: #0B0E14;
+  --th-surface: #1A1D23;
+  --th-fg: #E6EDF3;
+  --th-accent: #58A6FF;
+  --th-border: #30363D;
+}
+/**Nordic*/
+[th-theme="nordic"] {
+  --th-bg: #2E3440;
+  --th-surface: #3B4252;
+  --th-fg: #ECEFF4;
+  --th-accent: #88C0D0;
+  --th-border: #4C566A;
+}
+/**Cyber*/
+[th-theme="cyber"] {
+  --th-bg: #000000;
+  --th-surface: #121212;
+  --th-fg: #FFFFFF;
+  --th-accent: #BB86FC;
+  --th-border: #2C2C2C;
+}
+/**Forest*/
+[th-theme="forest"] {
+  --th-bg: #1B1F13;
+  --th-surface: #24291A;
+  --th-fg: #E2E4DC;
+  --th-accent: #E67E22;
+  --th-border: #3E4431;
+}
+/**Terminal*/
+[th-theme="terminal"] {
+  --th-bg: #0D110D;
+  --th-surface: #161B16;
+  --th-fg: #20C20E;
+  --th-accent: #D2FF00;
+  --th-border: #253325;
+}
+.th-bg { background-color: var(--th-bg) !important; }
+.th-surface { background-color: var(--th-surface) !important; }
+.th-fg { color: var(--th-fg) !important; }
+.th-accent-text { color: var(--th-accent) !important; }
+.th-border { border: 1px solid var(--th-border) !important; }
+html, body {
+    height: 100%;
+}
 body {
+    background-attachment: fixed;
+    background-size: cover;
     margin: 0;
     padding: 0;
-    overflow: hidden;
-    background-color: rgba(0, 0, 0, 0); /* Transparent */
     font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
-:root {
-    --bg-color: #18181b;
-    --text-color: #efeff1;
-    --user-color: #bf94ff;
-    --accent-color: #00ffcc;
+/* #container {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+} */
+@keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 
-/* Light Theme overrides */
-[data-theme="light"] {
-    --bg-color: #f7f7f8;
-    --text-color: #1f1f23;
-    --user-color: #9146FF; /* Signature Twitch purple */
-    --accent-color: #9146FF; /* Signature Twitch purple */
+/* Slide Out to the right */
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(20px); opacity: 0; }
 }
 .twitchchatmessage{
     padding: 2px 5px;
@@ -31,30 +83,6 @@ body {
 .twitchchatuser {
     font-weight: bold;
     color: var(--accent-color);
-}
-/*SOCIALS*/
-#socialcontainer {
-    display: flex;
-    align-items: flex-start;
-    padding: 20px;
-}
-#socialicon{
-    color:var(--accent-color);
-}
-#socialbox {
-    background: var(--bg-color); 
-    color: var(--accent-color);
-    padding: 10px 20px;
-    border-left: 5px solid var(--accent-color); /* Bright accent color */
-    border-radius: 4px;
-    font-size: 24px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    animation: slideIn 1s ease-out;
-}
-
-#sociallabel {
-    color: var(--text-color);
-    margin-right: 10px;
 }
 
 /* Smooth entry animation */

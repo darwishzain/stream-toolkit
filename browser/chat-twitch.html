@@ -2,15 +2,15 @@
 <html>
 <head>
     <title>Twitch Chat for OBS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
-    <script type="text/javascript" src="./tmi.min.js"></script>
-    <link rel="stylesheet" href="./style.css">
-    <script type="text/javascript" src="./main.js"></script>
+    <script type="text/javascript" src="./lib/tmi.min.js"></script>
+    <link rel="stylesheet" href="./lib/style.css">
+    <script type="text/javascript" src="./lib/main.js"></script>
 </head>
-<body>
-    <div id="twitchchat"></div>
+<body class="th-fg">
+    <div id="container" class=""></div>
+    <style>
+    </style>
     <script>
-        
         function tmichat(){
             if(!user) return;
             // Set your channel name here
@@ -20,14 +20,15 @@
                 channels: [ channelName ]
             });
 
-            const twitchchat = document.getElementById('twitchchat');
+            const container = document.getElementById('container');
             client.on('message', (channel, tags, message, self) => {
-                const div = document.createElement('div');
-                div.className = 'twitchchatmessage';
-                div.innerHTML = `<span class="twitchchatuser">${tags['display-name']}:</span> ${message}`;
-                twitchchat.appendChild(div);
-                if (twitchchat.children.length > 50) {
-                    twitchchat.removeChild(twitchchat.firstChild);
+                const bubble = document.createElement('div');
+                bubble.className = 'tc-message th-bg d-flex align-items-center gap-2 m-2';
+                bubble.classList.add();
+                bubble.innerHTML = `<span class="th-accent-text tc-user mb-0 fw-bold">${tags['display-name']}:</span> <span class="mb-0">${message}</span>`;
+                container.appendChild(bubble);
+                if (container.children.length > 50) {
+                    container.removeChild(container.firstChild);
                 }
                 // Auto-scroll to bottom
                 window.scrollTo(0, document.body.scrollHeight);

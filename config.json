@@ -1,0 +1,9 @@
+{
+    "themes":["midnight","nordic","cyber","forest","terminal"],
+    "icons":{
+        "tiktok": "bi bi-tiktok",
+        "instagram":"bi bi-instagram",
+        "youtube": "bi bi-youtube",
+        "daun": "bi bi-leaf-fill"
+    }
+}

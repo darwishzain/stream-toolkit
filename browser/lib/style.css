@@ -45,6 +45,11 @@
 .th-fg { color: var(--th-fg) !important; }
 .th-accent-text { color: var(--th-accent) !important; }
 .th-border { border: 1px solid var(--th-border) !important; }
+.th-border-a { border: 1px solid var(--th-border) !important; }
+.th-border-bl{
+    border-bottom: 1px solid var(--th-border) !important;
+    border-left: 1px solid var(--th-border) !important;
+}
 html, body {
     height: 100%;
 }

@@ -36,12 +36,12 @@
             const icon = document.getElementById('icon');
             setInterval(() =>
             {
-                const socials = Object.keys(user.socials);
+                const socialicons = Object.values(user.socials);
                 box.style.animation = 'slideOut 0.5s ease-in forwards';
                 setTimeout(() =>
                 {
-                    index = (index+1) % socials.length;
-                    icon.className = user.socials[socials[index]].icon;
+                    index = (index+1) % socialicons.length;
+                    icon.className = socialicons[index];
                     box.style.animation = 'slideIn 0.5s ease-out forwards';
 
                 },500);

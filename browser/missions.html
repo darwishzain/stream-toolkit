@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="./lib/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script type="text/javascript" src="./lib/main.js"></script>
+    <title>Missions</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+</head>
+<body class="th-fg">
+    <div id="container">
+        <div id="missions" class="th-fg"></div>
+    </div>
+    <!--  -->
+    <style>
+    </style>
+    <script>
+        function initmissions (){
+            if(!user) return;
+            const missions = document.getElementById('missions');
+            const title = document.createElement('h1');
+            title.textContent = user.missions.label;
+            title.classList.add("text-center","th-accent-text");
+            missions.appendChild(title);
+            for (const mission of user.missions.items) {
+                m = document.createElement('h3');
+                m.textContent = mission[0]+" +"+mission[2]+"xp";
+                m.classList.add("th-bg","th-fg","th-border-a","w-50","m-auto","my-2","p-3");
+                missions.appendChild(m);
+            }
+        }
+    </script>
+</body>
+</html>

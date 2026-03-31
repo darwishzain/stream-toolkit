@@ -25,6 +25,11 @@ async function loadconfig() {
         if (typeof tmichat === "function") {
             tmichat();
         }
+
+        if (typeof initmissions === "function")
+        {
+            initmissions();
+        }
     } catch (error) {
         console.error("One of the files failed to load(", error, ")");
     }

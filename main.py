@@ -1,4 +1,5 @@
-import sys,json,os,pyperclip,shutil
+import sys,json,os,pyperclip,shutil,webbrowser
+import http.server,socketserver,threading
 from pathlib import Path
 import webbrowser
 from PySide6.QtWidgets import (QApplication, QMainWindow, QPushButton, QTabWidget, QWidget, QLabel)
@@ -11,6 +12,39 @@ def reloadapp():
     print("Reloading App...")
     python = sys.executable
     os.execl(python, python, * sys.argv)
+def openjson(source):
+    try:
+        with open(source, 'r') as j:
+            return json.load(j)
+    except FileNotFoundError:
+        return "Error: The file was not found."
+    except json.JSONDecodeError:
+        return "Error: Failed to decode JSON. Check the file format."
+
+def writejson(source,data):
+    try:
+        with open(source,'w') as j:
+            json.dump(data,j,indent=4)
+    except FileNotFoundError:
+        return "Error: The file was not found."
+    except json.JSONDecodeError:
+        return "Error: Failed to decode JSON. Check the file format."
+
+def openlink(link):
+    webbrowser.open(str(link))
+
+def runserver(PORT):
+    handler = http.server.SimpleHTTPRequestHandler
+    socketserver.TCPServer.allow_reuse_address = True
+
+    with socketserver.TCPServer(("", PORT), handler) as httpd:
+        print(f"Server started at localhost:{PORT}")
+        httpd.serve_forever()
+config = openjson('config.json')
+if not config["server"]:
+    port = int("8080")
+else:
+    port = int(config["server"])
 class OverlayManager(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -19,22 +53,48 @@ class OverlayManager(QMainWindow):
         self.tabs = QTabWidget()
         self.setCentralWidget(self.tabs)
 
+        self.config = config
+        if os.path.exists(self.config["user"]):
+            self.userdata = openjson(self.config['user'])
+        else:
+            try:
+                # create user config(copy example and paste),update user config path, write to config
+                userfile_c = 'example/user.json'
+                userfile_p = 'browser/user.json'
+                shutil.copy2(userfile_c,userfile_p)
+                self.config['user'] = userfile_p
+                writejson('config.json',self.config)#Update config
+            except Exception as e:
+                print(f"Error copying file: {e}")
+        #self.menuBar().addAction("&Home", self.hometab)
+        #self.menuBar().addAction("&Edit", self.edit)
         self.menuBar().addAction("&Reload", reloadapp)
         self.userjson = "browser/user.json"
-        self.edit()
 
-    def edit(self):
-        with open('config.json',"r") as c:
-            config = json.load(c)
-        self.edittab = QWidget()
+        self.hometab()
+        self.edit()
+    def hometab(self):
         layout = QVBoxLayout()
+        hometab = QWidget()
+        hometab.setLayout(layout)
+        #* Server 
+        server_b = QHBoxLayout()
+        server_b.addWidget(QLabel(f"Server: {port}"))
+        openserver_btn = QPushButton("Navigate to browser overlay")
+        openserver_btn.clicked.connect(lambda checked,link=f"http://127.0.0.1:{port}/browser":openlink(link))
+        server_b.addWidget(openserver_btn)
+        layout.addLayout(server_b)
+        for overlay in config['overlays']:
+            print(overlay)
+
+        self.tabs.addTab(hometab,"Home")
+    def edit(self):
+        layout = QVBoxLayout()
+        self.edittab = QWidget()
         self.edittab.setLayout(layout)
 
-        if not os.path.exists('browser'):
-            os.makedirs('browser')
         if os.path.exists(self.userjson):
-            with open(self.userjson,"r") as u:
-                self.userdata = json.load(u)
+            self.userdata = openjson(self.userjson)
             layout.addWidget(QLabel("Info & Theme"))
             #*User Info
             general_l = QVBoxLayout()
@@ -42,7 +102,7 @@ class OverlayManager(QMainWindow):
             general_l.addWidget(self.usernamein)
             #* Theme
             self.themeselect = QComboBox()
-            self.themeselect.addItems(config["themes"])
+            self.themeselect.addItems(self.config["themes"])
             if self.userdata["theme"] != "":
                 self.themeselect.setCurrentIndex(self.themeselect.findText(self.userdata["theme"]))
             else:
@@ -52,7 +112,8 @@ class OverlayManager(QMainWindow):
             self.editgeneral = QPushButton("Update")
             self.editgeneral.clicked.connect(self.edit_updateinfo)
             general_l.addWidget(self.editgeneral)
-
+            #* Server
+            
             layout.addWidget(QFrame(frameShape=QFrame.HLine, frameShadow=QFrame.Sunken))
             #* Social Media Icons
             layout.addWidget(QLabel("Socials"))
@@ -154,6 +215,12 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = OverlayManager()
     window.show()
+    server_thread = threading.Thread(
+        target=runserver, 
+        args=(port,), 
+        daemon=True
+    )
+    server_thread.start()
     sys.exit(app.exec())
 
     #self.port = "7070"

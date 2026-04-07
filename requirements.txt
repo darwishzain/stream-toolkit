@@ -1,3 +1,6 @@
 PySide6
 pyperclip
 streamlit
+obs-websocket-py
+obsws-python
+watchdog

@@ -1,5 +1,6 @@
-import sys,json,os,pyperclip,shutil,webbrowser
+import sys,json,os,pyperclip,shutil,webbrowser,time
 import http.server,socketserver,threading
+import obsws_python as obs
 from pathlib import Path
 import webbrowser
 from PySide6.QtWidgets import (QApplication, QMainWindow, QPushButton, QTabWidget, QWidget, QLabel)
@@ -12,6 +13,7 @@ def reloadapp():
     print("Reloading App...")
     python = sys.executable
     os.execl(python, python, * sys.argv)
+
 def openjson(source):
     try:
         with open(source, 'r') as j:
@@ -40,6 +42,7 @@ def runserver(PORT):
     with socketserver.TCPServer(("", PORT), handler) as httpd:
         print(f"Server started at localhost:{PORT}")
         httpd.serve_forever()
+
 config = openjson('config.json')
 if not config["server"]:
     port = int("8080")
@@ -70,8 +73,11 @@ class OverlayManager(QMainWindow):
         #self.menuBar().addAction("&Edit", self.edit)
         self.menuBar().addAction("&Reload", reloadapp)
         self.userjson = "browser/user.json"
-
         self.hometab()
+
+        self.edit_l = QVBoxLayout()
+        self.edit_t = QWidget()
+        self.edit_t.setLayout(self.edit_l)
         self.edit()
     def hometab(self):
         layout = QVBoxLayout()
@@ -89,119 +95,110 @@ class OverlayManager(QMainWindow):
 
         self.tabs.addTab(hometab,"Home")
     def edit(self):
-        layout = QVBoxLayout()
-        self.edittab = QWidget()
-        self.edittab.setLayout(layout)
-
-        if os.path.exists(self.userjson):
-            self.userdata = openjson(self.userjson)
-            layout.addWidget(QLabel("Info & Theme"))
-            #*User Info
-            general_l = QVBoxLayout()
-            self.usernamein = QLineEdit(self.userdata["username"])
-            general_l.addWidget(self.usernamein)
-            #* Theme
-            self.themeselect = QComboBox()
-            self.themeselect.addItems(self.config["themes"])
-            if self.userdata["theme"] != "":
-                self.themeselect.setCurrentIndex(self.themeselect.findText(self.userdata["theme"]))
-            else:
-                self.themeselect.setCurrentIndex(-1)
-            general_l.addWidget(self.themeselect)
-            layout.addLayout(general_l)
-            self.editgeneral = QPushButton("Update")
-            self.editgeneral.clicked.connect(self.edit_updateinfo)
-            general_l.addWidget(self.editgeneral)
-            #* Server
-            
-            layout.addWidget(QFrame(frameShape=QFrame.HLine, frameShadow=QFrame.Sunken))
-            #* Social Media Icons
-            layout.addWidget(QLabel("Socials"))
-            self.socials_i = QListWidget()
-            for platform, icon in self.userdata["socials"].items():
-                # Format the string exactly how you want it to look
-                display_text = f"{platform}: {icon}" 
-                self.socials_i.addItem(display_text)
-            layout.addWidget(self.socials_i)
-            layout.addWidget(QFrame(frameShape=QFrame.HLine, frameShadow=QFrame.Sunken))
-            #* Missions Edit
-            editmission = QVBoxLayout()
-            editmission.addWidget(QLabel("Missions"))
-            self.missions = QTableWidget()
-            self.missions.setColumnCount(4)
-            self.missions.setRowCount(len(self.userdata["missions"]["items"]))
-            self.missions.setHorizontalHeaderLabels(["Mission", "Status","Reward","Remove"])
-            for m in range(len(self.userdata["missions"]["items"])):
-                self.missions.setItem(m,0,QTableWidgetItem(self.userdata["missions"]["items"][m][0]))#* Mission Name
-                #self.missions.setItem(m,1,QTableWidgetItem(str("status")))#* Mission Status
-                if self.userdata["missions"]["items"][m][1] == 0:
-                    mupdate_b = QPushButton("Incomplete")
-                else:
-                    mupdate_b = QPushButton("Complete")
-                mupdate_b.clicked.connect(lambda checked, x=m: self.update_mstatus(x))
-                self.missions.setCellWidget(m,1,mupdate_b)
-                self.missions.setItem(m,2,QTableWidgetItem(self.userdata["missions"]["items"][m][2]))
-                mremove_b = QPushButton("-")
-                mremove_b.clicked.connect(lambda checked, x=m: self.remove_mission(x))
-                self.missions.setCellWidget(m,3,mremove_b)
-            self.missions.resizeColumnsToContents()
-            editmission.addWidget(self.missions,1)
-
-            madd_l = QHBoxLayout()
-            self.mmission_a = QLineEdit()
-            self.mmission_a.setPlaceholderText("Add Mission")
-            madd_l.addWidget(self.mmission_a)
-            self.mreward_a = QComboBox()
-            self.mreward_a.addItems(["10", "50", "100", "250", "500", "1000"])
-            madd_l.addWidget(self.mreward_a)
-            self.madd_b = QPushButton("+")
-            self.madd_b.clicked.connect(self.add_mission)
-            madd_l.addWidget(self.madd_b)
-
-            editmission.addLayout(madd_l)
-
-            layout.addLayout(editmission)
+        userdata = self.userdata
+        #* General
+        self.edit_l.addWidget(QLabel("User & Theme"))
+        self.username_input = QLineEdit(userdata["username"])
+        self.edit_l.addWidget(self.username_input)
+        self.theme_input = QComboBox()
+        self.theme_input.addItems(config["themes"])
+        if userdata["theme"] != "":
+            self.theme_input.setCurrentIndex(self.theme_input.findText(userdata["theme"]))
         else:
-            try:
-                shutil.copy2('example/user.json','browser/user.json')
-            except Exception as e:
-                print(f"Error copying file: {e}")
+            self.theme_input.setCurrentIndex(-1)
+        self.edit_l.addWidget(self.theme_input)
+        self.general_btn = QPushButton("Update")
+        self.general_btn.clicked.connect(self.updategeneral)#TODO Fix then add function
+        self.edit_l.addWidget(self.general_btn)
+        self.edit_l.addWidget(QFrame(frameShape=QFrame.HLine, frameShadow=QFrame.Sunken))
+        #* Social Media Icon !KIV
+        self.edit_l.addWidget(QLabel("Socials"))
+        self.socials_input = QListWidget()
+        for platform, icon in userdata["socials"].items():
+            # Format the string exactly how you want it to look
+            display_text = f"{platform}: {icon}" 
+            self.socials_input.addItem(display_text)
+        self.edit_l.addWidget(self.socials_input)
+        self.edit_l.addWidget(QFrame(frameShape=QFrame.HLine, frameShadow=QFrame.Sunken))
+        #* Missions
+        editmission = QVBoxLayout()
+        editmission.addWidget(QLabel("Missions"))
+        self.missions = QTableWidget()
+        self.missions.setColumnCount(4)
+        self.missions.setRowCount(len(userdata["missions"]["items"]))
+        self.missions.setHorizontalHeaderLabels(["Mission", "Status","Reward","Remove"])
+        for m in range(len(userdata["missions"]["items"])):
+            self.missions.setItem(m,0,QTableWidgetItem(userdata["missions"]["items"][m][0]))#* Mission Name
+            #self.missions.setItem(m,1,QTableWidgetItem(str("status")))#* Mission Status
+            if userdata["missions"]["items"][m][1] == 0:
+                mupdate_b = QPushButton("Incomplete")
+            else:
+                mupdate_b = QPushButton("Complete")
+            mupdate_b.clicked.connect(lambda checked, x=m: self.mission_update(x))
+            self.missions.setCellWidget(m,1,mupdate_b)
+            self.missions.setItem(m,2,QTableWidgetItem(userdata["missions"]["items"][m][2]))
+            mremove_b = QPushButton("-")
+            mremove_b.clicked.connect(lambda checked, x=m: self.mission_remove(x))
+            self.missions.setCellWidget(m,3,mremove_b)
+        self.missions.resizeColumnsToContents()
+        editmission.addWidget(self.missions,1)
+        madd_l = QHBoxLayout()
+        self.mission_input = QLineEdit()
+        self.mission_input.setPlaceholderText("Add Mission")
+        madd_l.addWidget(self.mission_input)
+        self.reward_input = QComboBox()
+        self.reward_input.addItems(["10", "50", "100", "250", "500", "1000"])
+        madd_l.addWidget(self.reward_input)
+        self.mission_btn = QPushButton("+")
+        self.mission_btn.clicked.connect(self.mission_add)
+        madd_l.addWidget(self.mission_btn)
 
-        self.tabs.addTab(self.edittab,"Edit")
+        editmission.addLayout(madd_l)
 
-    def edit_updateinfo(self):
-        self.userdata["username"] = self.usernamein.text()
-        self.userdata["theme"] = self.themeselect.currentText()
-        self.updateuser(self.userdata)
+        self.edit_l.addLayout(editmission)
 
-    def edit_updatetheme(self):
-        self.updateuser(self.userdata)
-    def updateuser(self,update):
-        try:
-            with open(self.userjson,"w") as u:
-                json.dump(update,u,indent = 4)
-            self.tabs.removeTab(self.tabs.indexOf(self.edittab))
-            self.edit()
-        except Exception as e:
-            print("Error:" + str(e))
-            print(update)
+        self.tabs.addTab(self.edit_t,"Edit")
 
-    def add_mission(self):
-        mission = self.mmission_a.text()
-        reward = self.mreward_a.currentText()
+    def cleartab(self,index):
+        currenttab = self.tabs.currentIndex()
+        tabwidget = self.tabs.widget(index)
+        layout = tabwidget.layout()
+        if layout is not None:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.deleteLater()
+
+    def update(self):
+        currentindex = self.tabs.currentIndex()
+        writejson(config["user"],self.userdata)
+        self.cleartab(currentindex)
+        self.edit()
+        self.tabs.setCurrentIndex(currentindex)
+
+    def updategeneral(self):
+        self.userdata["username"] = self.username_input.text()
+        self.userdata["theme"] = self.theme_input.currentText()
+        self.update()
+
+    def mission_add(self):
+        currentindex = self.tabs.currentIndex()
+        mission = self.mission_input.text()
+        reward = self.reward_input.text()
         status = 0
-        add = [mission, status, reward]
-        if mission:
-            self.userdata["missions"]["items"].append(add)
-            self.updateuser(self.userdata)
-            self.mmission_a.clear()
-    def remove_mission(self, index):
+        add = [mission,status,reward]
+        if mission and reward and status:
+            self.userdata["mission"]["items"].append(add)
+            self.mission_input.clear()
+            self.update()
+    def mission_remove(self,index):
         del self.userdata["missions"]["items"][index]
-        self.updateuser(self.userdata)
-    def update_mstatus(self, index):
+        self.update()
+    def mission_update(self,index):
         current = self.userdata["missions"]["items"][index][1]
-        self.userdata["missions"]["items"][index][1] = 1-current
-        self.updateuser(self.userdata)
+        self.userdata["missions"]["items"][index][1] = 1 - current
+        self.update()
     #def open_browser(self):
     #    webbrowser.open(self.url)
 #

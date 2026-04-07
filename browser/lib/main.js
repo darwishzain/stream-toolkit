@@ -6,11 +6,6 @@ async function loadconfig() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         user = await response.json();
-        //if (user.theme === "light") {
-        //    document.documentElement.setAttribute('data-theme', 'light');
-        //} else {
-        //    document.documentElement.setAttribute('data-theme', 'dark');
-        //}
         const activetheme = user.theme || 'default';
         document.body.setAttribute('th-theme',activetheme);
         if(typeof socialrotation == "function")

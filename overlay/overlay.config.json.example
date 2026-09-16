@@ -1,0 +1,12 @@
+{
+    "theme":"default",
+    "social-ticker":{
+        "slidein":1000,
+        "slideout":1000,
+        "username":{
+            "twitter":"twittername",
+            "instagram":"instagramname",
+            "twitch":"twitchname"
+        }
+    }
+}

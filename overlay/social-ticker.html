@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Ticker</title>
+    <script type="text/javascript" src="./lib/main.js"></script>
+</head>
+<body class="th-fg">
+    <div id="box" class="th-fg th-bg" 
+        style="
+            display:flex;
+            align-items:flex-start;
+            padding:20px;
+            width:30%;
+            margin: 5px;
+            border-radius:4px;
+            font-size:24px;
+            border-left:5px solid var(--th-accent);
+            "
+    >
+        <p id="label" class="th-accent-text mx-2">
+            Follow
+        </p>
+        <i id="icon" class="" style="font-size: 30px;"></i>
+        <p id="username" class="th-fg mx-2 ">
+            @YourHandle
+        </p>
+    </div>
+    <script>
+        function socialticker(){
+            if(!config || !config["social-ticker"])
+            {
+                console.error("Missing configuration for Social Ticker.");
+                return;
+            }
+            const socialicons = [
+                ["facebook","bi bi-facebook"],
+                ["github", "bi bi-github"],
+                ["instagram","bi bi-instagram"],
+                ["threads","bi bi-threads"],
+                ["tiktok","bi bi-tiktok"],
+                ["twitch", "bi bi-twitch"],
+                ["twitter","bi bi-twitter"],
+                ["youtube","bi bi-youtube"]
+            ];
+            const box = document.getElementById('box');
+            const iconElement = document.getElementById('icon');
+            const usernameElement = document.getElementById('username');
+            let index = 0;
+            setInterval(() => {
+                index = (index + 1) % Object.values(config["social-ticker"].username).length;
+
+                const platform = Object.keys(config["social-ticker"].username)[index];
+                iconElement.className = socialicons.find(item => item[0] === platform);
+
+                const username = Object.values(config["social-ticker"].username)[index];
+                usernameElement.innerText = '@' + username;
+
+                box.style.animation = 'slideIn 0.5s ease-in forwards';
+                setTimeout(() => {
+                    box.style.animation = 'slideOut 0.5s ease-out forwards';
+                }, config["social-ticker"].duration);
+            }, config["social-ticker"].duration + 1000);
+        }
+    </script>
+</body>
+</html>

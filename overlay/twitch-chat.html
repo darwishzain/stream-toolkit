@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitch Chat</title>
+    <script type="text/javascript" src="./lib/tmi.min.js"></script>
+    <script type="text/javascript" src="./lib/main.js"></script>
+</head>
+<body>
+    <div id="chatbox" style="width:50%;margin:5px"></div>
+    <script>
+        function tmichat(){
+            if(!config || !config["twitch-chat"] || !config["twitch-chat"].username || !config["social-ticker"].username.twitch)
+            {
+                console.error("Missing configuration for Twitch Chat.");
+                return;
+            }
+            const client = new tmi.Client({
+                channels: [ config["twitch-chat"].username ]
+            });
+            const chatbox = document.getElementById('chatbox');
+            client.on('message', (channel, tags, message, self) => {
+                const bubble = document.createElement('div');
+                bubble.style = `
+                    display:flex;
+                    align-items:center;
+                    gap:10px;
+                    margin:5px auto;
+                    padding: 2px 5px;
+                    border-radius:4px;
+                    background-color:var(--th-bg);
+                `;
+                bubble.className = 'th-bg';
+                bubble.classList.add();
+                bubble.innerHTML = `
+                <span class="th-accent-text mb-0 fw-bold">
+                    ${tags['display-name']}:
+                </span>
+                <span class="th-fg mb-0">
+                    ${message}
+                </span>`;
+                chatbox.appendChild(bubble);
+                if (chatbox.children.length > 50) {
+                    chatbox.removeChild(chatbox.firstChild);
+                    console.log("message removed");
+                }
+                window.scrollTo(0, document.body.scrollHeight);// Auto-scroll to
+            });
+
+            client.connect();
+        }
+    </script>
+</body>
+</html>

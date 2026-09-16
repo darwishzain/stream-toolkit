@@ -1,12 +1,15 @@
 {
     "theme":"default",
     "social-ticker":{
-        "slidein":1000,
-        "slideout":1000,
+        "duration":2000,
         "username":{
             "twitter":"twittername",
             "instagram":"instagramname",
             "twitch":"twitchname"
         }
+    },
+    "twitch-chat":{
+        "username":"twitchchannel",
+        "timeout":10000
     }
 }

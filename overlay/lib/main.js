@@ -21,10 +21,7 @@ async function loadconfig() {
         config = await response.json();
         const activetheme = config.theme || 'default';
         document.body.setAttribute('th-theme',activetheme);
-        if(typeof socialrotation == "function")
-        {
-            socialrotation();
-        }
+        
         if(typeof socialticker == "function")
         {
             socialticker();

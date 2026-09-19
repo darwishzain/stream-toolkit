@@ -11,6 +11,24 @@ styleLink.forEach(link => {
     head.appendChild(style);
 });
 
+function errorMessage(message, fix = null){
+    console.error(message);
+    const body = document.body;
+    const error = document.createElement('div');
+    error.textContent = message;
+    error.className = 'th-bg';
+    error.style = `
+        top:10px;
+        margin: 2px auto;
+        width: 80%;
+        z-index: 9999;
+        color: red;
+        text-align: center;
+        padding: 10px;
+        border: 1px solid red;
+    `;
+    body.prepend(error);
+}
 config = null;
 async function loadconfig() {
     try {
@@ -42,4 +60,8 @@ async function loadconfig() {
         console.error("One of the files failed to load(", error, ")");
     }
 }
-loadconfig()
+if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', loadconfig);
+} else {
+    loadconfig();
+}

@@ -11,9 +11,19 @@
     <div id="chatbox" style="width:50%;margin:5px"></div>
     <script>
         function tmichat(){
-            if(!config || !config["twitch-chat"] || !config["twitch-chat"].username || !config["social-ticker"].username.twitch)
+            if(!config)
             {
-                console.error("Missing configuration for Twitch Chat.");
+                errorMessage("Missing configuration.");
+                return;
+            }
+            if(!config["twitch-chat"])
+            {
+                errorMessage("Missing configuration for Twitch Chat.");
+                return;
+            }
+            if(!config["twitch-chat"].username)
+            {
+                errorMessage("Missing username for Twitch Chat.");
                 return;
             }
             const client = new tmi.Client({

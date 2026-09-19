@@ -12,7 +12,7 @@
             display:flex;
             align-items:flex-start;
             padding:20px;
-            width:30%;
+            width:100%;
             margin: 5px;
             border-radius:4px;
             font-size:24px;
@@ -29,20 +29,35 @@
     </div>
     <script>
         function socialticker(){
-            if(!config || !config["social-ticker"])
+            if(!config)
             {
-                console.error("Missing configuration for Social Ticker.");
+                errorMessage("Missing configuration.");
+                return;
+            }
+            if(!config['social-ticker'])
+            {
+                errorMessage("Missing configuration for Social Ticker.");
+                return;
+            }
+            if(!config['social-ticker'].username)
+            {
+                errorMessage("Missing list of usernames and platforms for Social Ticker.");
                 return;
             }
             const socialicons = [
-                ["facebook","bi bi-facebook"],
-                ["github", "bi bi-github"],
-                ["instagram","bi bi-instagram"],
-                ["threads","bi bi-threads"],
-                ["tiktok","bi bi-tiktok"],
-                ["twitch", "bi bi-twitch"],
-                ["twitter","bi bi-twitter"],
-                ["youtube","bi bi-youtube"]
+                ["behance","bi bi-behance"],
+                ["bluesky","bi bi-bluesky"],
+                ["discord","bi bi-discord"],
+                ["linkedin","bi bi-linkedin"],
+                ["mastodon","bi bi-mastodon"],
+                ["pinterest","bi bi-pinterest"],
+                ["reddit","bi bi-reddit"],
+                ["slack","bi bi-slack"],
+                ["snapchat","bi bi-snapchat"],
+                ["spotify","bi bi-spotify"],
+                ["substack","bi bi-substack"],
+                ["telegram","bi bi-telegram"],
+                ["whatsapp","bi bi-whatsapp"]
             ];
             const box = document.getElementById('box');
             const iconElement = document.getElementById('icon');

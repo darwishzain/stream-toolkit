@@ -40,7 +40,17 @@
     --th-accent: #D2FF00;
     --th-border: #253325;
 }
+/** Warning*/
+[th-theme="warning"]{
+    --th-bg: #0D0D0D;
+    --th-surface: #1A1A1A;
+    --th-fg: #F5F5F5;
+    --th-accent: #FFCC00;
+    --th-border: #FFAA00;
+}
+
 .th-bg { background-color: var(--th-bg) !important; }
+.th-bg-accent { background-color: var(--th-accent) !important; }
 .th-surface { background-color: var(--th-surface) !important; }
 .th-fg { color: var(--th-fg) !important; }
 .th-accent-text { color: var(--th-accent) !important; }

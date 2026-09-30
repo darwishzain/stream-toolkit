@@ -37,18 +37,48 @@ async function loadconfig() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         config = await response.json();
-        const activetheme = config.theme || 'default';
-        document.body.setAttribute('th-theme',activetheme);
+        if(!config)
+        {
+            errorMessage("Missing configuration file.");
+            return;
+        }
 
+        const {colors,typography} = config.theme;
+        const root = document.documentElement;
+        root.setAttribute('th-theme',config.theme.id);
+        root.style.setProperty('--th-accent', colors.primary);
+        root.style.setProperty('--th-secondary', colors.secondary);
+        root.style.setProperty('--th-bg', colors.background);
+        root.style.setProperty('--th-fg', colors.text);
+        root.style.setProperty('--th-glow', colors.glow);
+        if (typography) {
+            root.style.setProperty('--th-font-family', typography.fontFamily);
+            root.style.setProperty('--th-font-size-base', typography.fontSizeBase);
+        }
         if(typeof socialticker == "function")
         {
+            if(!config['social-ticker'])
+            {
+                errorMessage("Missing configuration for Social Ticker.");
+                return;
+            }
             socialticker();
         }
         if (typeof tmichat === "function") {
+            if(!config["twitch-chat"])
+            {
+                errorMessage("Missing configuration for Twitch Chat.");
+                return;
+            }
             tmichat();
         }
         if (typeof wavingflag === "function")
         {
+            if(!config['waving-flag'])
+            {
+                errorMessage("Missing configuration for Waving Flag.");
+                return;
+            }
             wavingflag();
         }
         //initcomfy

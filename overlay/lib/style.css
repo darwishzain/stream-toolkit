@@ -1,54 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
 /**THEME*/
 /**Midnight*/
-:root, [th-theme="default"], [th-theme=""], [th-theme="midnight"] {
+/* Default fallbacks if JSON fails to load */
+:root {
     --th-bg: #0B0E14;
     --th-surface: #1A1D23;
     --th-fg: #E6EDF3;
     --th-accent: #58A6FF;
     --th-border: #30363D;
+    --th-glow: rgba(88, 166, 255, 0.4);
 }
-/**Nordic*/
-[th-theme="nordic"] {
-    --th-bg: #2E3440;
-    --th-surface: #3B4252;
-    --th-fg: #ECEFF4;
-    --th-accent: #88C0D0;
-    --th-border: #4C566A;
-}
-/**Cyber*/
-[th-theme="cyber"] {
-    --th-bg: #000000;
-    --th-surface: #121212;
-    --th-fg: #FFFFFF;
-    --th-accent: #BB86FC;
-    --th-border: #2C2C2C;
-}
-/**Forest*/
-[th-theme="forest"] {
-    --th-bg: #1B1F13;
-    --th-surface: #24291A;
-    --th-fg: #E2E4DC;
-    --th-accent: #E67E22;
-    --th-border: #3E4431;
-}
-/**Terminal*/
-[th-theme="terminal"] {
-    --th-bg: #0D110D;
-    --th-surface: #161B16;
-    --th-fg: #20C20E;
-    --th-accent: #D2FF00;
-    --th-border: #253325;
-}
-/** Warning*/
-[th-theme="warning"]{
-    --th-bg: #0D0D0D;
-    --th-surface: #1A1A1A;
-    --th-fg: #F5F5F5;
-    --th-accent: #FFCC00;
-    --th-border: #FFAA00;
-}
-
 .th-bg { background-color: var(--th-bg) !important; }
 .th-bg-accent { background-color: var(--th-accent) !important; }
 .th-surface { background-color: var(--th-surface) !important; }

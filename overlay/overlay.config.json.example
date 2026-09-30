@@ -1,5 +1,18 @@
 {
-    "theme":"default",
+    "theme":{
+        "id": "cyber-cyan",
+        "colors": {
+            "primary": "#00f3ff",
+            "secondary": "#7000ff",
+            "background": "rgba(5, 11, 20, 0.85)",
+            "text": "#ffffff",
+            "glow": "rgba(0, 243, 255, 0.6)"
+        },
+        "typography": {
+            "fontFamily": "'Roboto', monospace",
+            "fontSizeBase": "14px"
+        }
+    },
     "social-ticker":{
         "duration":2000,
         "username":{

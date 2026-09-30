@@ -15,16 +15,6 @@
         let waveOffset = 0;
 
         function wavingflag(){
-            if(!config)
-            {
-                errorMessage("Missing configuration.");
-                return;
-            }
-            if(!config['waving-flag'])
-            {
-                errorMessage("Missing configuration for Waving Flag.");
-                return;
-            }
             if(!config['waving-flag'].image)
             {
                 errorMessage("Missing flag image for Waving Flag.");

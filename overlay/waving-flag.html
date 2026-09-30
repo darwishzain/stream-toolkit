@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waving Flag</title>
+    <script type="text/javascript" src="./lib/main.js"></script>
+</head>
+<body class="th-fg">
+    <canvas id="flagCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("flagCanvas");
+        const ctx = canvas.getContext("2d");
+        const img = new Image();
+        let waveOffset = 0;
+
+        function wavingflag(){
+            if(!config)
+            {
+                errorMessage("Missing configuration.");
+                return;
+            }
+            if(!config['waving-flag'])
+            {
+                errorMessage("Missing configuration for Waving Flag.");
+                return;
+            }
+            if(!config['waving-flag'].image)
+            {
+                errorMessage("Missing flag image for Waving Flag.");
+                return;
+            }
+            img.src = config['waving-flag'].image;
+            img.onload = () => {
+                sliceWidth = Math.max(1, img.width * 0.005);  // ~0.5% of width (min 1px)
+                frequency = (2 * Math.PI) / (img.width * 0.5); // ~2 full wave cycles across total width
+                amplitude = img.height * 0.08;                 // Max wave height is 8% of total height
+                speed = 0.08;
+                canvas.width = img.width;
+                canvas.height = img.height + amplitude * 2;
+                paddingY = amplitude;
+                animate();
+            };
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let x = 0; x < img.width; x += sliceWidth) {
+                // Anchored at the pole (left, x=0), maximum wave at the tip (right)
+                const progress = x / img.width;
+                const currentAmplitude = amplitude * progress;
+
+                // Calculate vertical offset
+                const yOffset = Math.sin(x * frequency - waveOffset) * currentAmplitude;
+
+                ctx.drawImage(
+                img,
+                x, 0, sliceWidth, img.height,                       // Source slice
+                x, paddingY + yOffset, sliceWidth, img.height       // Destination slice
+                );
+            }
+
+            waveOffset += speed;
+            requestAnimationFrame(animate);
+            }
+    </script>
+
+</body>
+</html>

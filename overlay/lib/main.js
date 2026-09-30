@@ -39,23 +39,20 @@ async function loadconfig() {
         config = await response.json();
         const activetheme = config.theme || 'default';
         document.body.setAttribute('th-theme',activetheme);
-        
+
         if(typeof socialticker == "function")
         {
             socialticker();
         }
-        if (typeof initcomfy === "function") {
-            initcomfy();
-        }
-
         if (typeof tmichat === "function") {
             tmichat();
         }
-
-        if (typeof initmissions === "function")
+        if (typeof wavingflag === "function")
         {
-            initmissions();
+            wavingflag();
         }
+        //initcomfy
+        //initmission
     } catch (error) {
         console.error("One of the files failed to load(", error, ")");
     }

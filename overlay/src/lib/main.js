@@ -30,19 +30,11 @@ function errorMessage(message, fix = null){
     body.prepend(error);
 }
 config = null;
-async function loadconfig() {
-    try {
-        const response = await fetch('overlay.config.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        config = await response.json();
-        if(!config)
-        {
-            errorMessage("Missing configuration file.");
-            return;
-        }
-
+async function initializeOverlay(){
+    try{
+        const confResponse = await fetch('/api/config');
+        config = await confResponse.json();
+        //Theme
         const {colors,typography} = config.theme;
         const root = document.documentElement;
         root.setAttribute('th-theme',config.theme.id);
@@ -55,6 +47,7 @@ async function loadconfig() {
             root.style.setProperty('--th-font-family', typography.fontFamily);
             root.style.setProperty('--th-font-size-base', typography.fontSizeBase);
         }
+        //run functions if exist
         if(typeof socialticker == "function")
         {
             if(!config['social-ticker'])
@@ -72,6 +65,15 @@ async function loadconfig() {
             }
             tmichat();
         }
+        if (typeof chat === "function")
+        {
+            if(!config["chatbox"])
+            {
+                errorMessage("Missing configuration for Chatbox.");
+                return;
+            }
+            chat();
+        }
         if (typeof wavingflag === "function")
         {
             if(!config['waving-flag'])
@@ -83,12 +85,14 @@ async function loadconfig() {
         }
         //initcomfy
         //initmission
-    } catch (error) {
+    }
+    catch(error)
+    {
         console.error("One of the files failed to load(", error, ")");
     }
 }
 if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', loadconfig);
+    window.addEventListener('DOMContentLoaded', initializeOverlay);
 } else {
-    loadconfig();
+    initializeOverlay();
 }

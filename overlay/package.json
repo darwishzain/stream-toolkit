@@ -8,16 +8,24 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "init": "cp overlay.conf.example overlay.conf"
+    "init": "cp overlay.conf.example overlay.conf",
+    "server": "node server.js",
+    "dev": "nodemon server.js & browser-sync start --proxy 'localhost:3000' --files 'public/**/*, views/**/*.ejs, server.js'"
   },
   "keywords": [],
   "type": "module",
   "dependencies": {
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "express": "^5.2.1",
     "open": "^11.0.4",
-    "socket.io": "^4.8.4"
+    "socket.io": "^4.8.4",
+    "tmi.js": "^1.8.5",
+    "youtubei.js": "^18.1.0"
   },
   "devDependencies": {
-    "@yao-pkg/pkg": "^6.23.0"
+    "@yao-pkg/pkg": "^6.23.0",
+    "browser-sync": "^2.25.0",
+    "nodemon": "^1.14.10"
   }
 }

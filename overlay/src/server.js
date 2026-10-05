@@ -4,8 +4,9 @@ const path = require('path');
 const { Server } = require('socket.io');
 const fs = require('fs');
 const { fileURLToPath } = require('url');
-const tmi = require('tmi.js');
+const tmiJS = require('tmi.js');
 const { Innertube, UniversalCache } = require('youtubei.js');
+const ComfyJS = require('comfy.js');
 
 const PORT = process.env.PORT || 3000;
 const isPackaged = process.pkg ? true : false;
@@ -46,7 +47,7 @@ app.get('/api/config', (req, res) => {
 });
 if (config.chatbox.twitchchannel) {
     console.log(`[Twitch] Connected to channel: ${config.chatbox.twitchchannel}`);
-    const client = new tmi.Client({
+    const client = new tmiJS.Client({
         channels: [config.chatbox.twitchchannel]
     });
     client.connect().catch(console.error);

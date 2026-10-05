@@ -21,10 +21,6 @@
             "twitch":"twitchname"
         }
     },
-    "twitch-chat":{
-        "username":"twitchchannel",
-        "timeout":10000
-    },
     "waving-flag":{
         "image":"https://upload.wikimedia.org/wikipedia/commons/6/61/Flag_of_Kelantan.svg"
     }

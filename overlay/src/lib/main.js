@@ -70,7 +70,6 @@ async function initializeOverlay(){
         //Function key mapping
         const modules = [
             { key: 'social-ticker', fn: typeof socialticker === 'function' ? socialticker : null },
-            { key: 'twitch-chat',   fn: typeof tmichat === 'function' ? tmichat : null },
             { key: 'chatbox',       fn: typeof chat === 'function' ? chat : null },
             { key: 'waving-flag',   fn: typeof wavingflag === 'function' ? wavingflag : null }
         ];

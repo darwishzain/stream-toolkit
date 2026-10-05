@@ -33,90 +33,14 @@ body {
     display: flex;
     flex-direction: column;
 }
-/* #container {
-    display: flex;
-    align-items: flex-start;
-    padding: 20px;
-} */
 @keyframes slideIn {
     from { transform: translateX(-20px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
 }
-
-/* Slide Out to the right */
+/* Slide Out to the left */
 @keyframes slideOut {
     from { transform: translateX(0); opacity: 1; }
     to { transform: translateX(-20px); opacity: 0; }
-}
-.tc-message{
-    padding: 2px 5px;
-    width: 80%;
-    margin: 5px auto;
-    border-radius:5px;
-    background-color: var(--bg-color);
-    color: var(--text-color);
-}
-
-.tc-user {
-    font-weight: bold;
-    color: var(--accent-color);
-}
-
-/**TRIGGER*/
-#alert-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.5);
-    font-family: 'Arial Black', sans-serif;
-    color: var(--accent-color);
-    text-shadow: 0 0 20px var(--bg-color);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#alert-text.show {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.2);
-}
-#trigger{
-    color: var(--accent-color);
-}
-.triggermessage{
-    color: var(--text-color);
-}
-.arrivedalert {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Arial Black', sans-serif;
-    color: var(--accent-color);
-    font-size: 2rem;
-    text-shadow: 0 0 10px rgba(0,0,0,0.5);
-    pointer-events: none; /* Make sure it doesn't block clicks */
-    /* The Animation */
-    animation: floatUp 4s ease-out forwards;
-}
-
-@keyframes floatUp {
-    0% { opacity: 0; transform: translate(-50%, 20px); }
-    10% { opacity: 1; transform: translate(-50%, 0); }
-    90% { opacity: 1; transform: translate(-50%, -50px); }
-    100% { opacity: 0; transform: translate(-50%, -100px); }
-}
-
-.chat-message {
-    position: relative;
-    font-family: 'Arial Black', sans-serif;
-    background: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
-    color: #ffffff;
-    padding: 8px 12px;
-    margin: 5px 0;
-    border-radius: 5px;
-    font-size: 1rem;
-    max-width: 300px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    animation: fadeInUp 0.5s ease-out;
 }
 /* aesthetics */
 /* Base container structure */

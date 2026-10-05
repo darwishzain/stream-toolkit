@@ -11,6 +11,35 @@
         "typography": {
             "fontFamily": "'Roboto', monospace",
             "fontSizeBase": "14px"
+        },
+        "aesthetics": {
+            "preset": "hologram",
+            "effects": {
+                "scanlines": {
+                "enabled": true,
+                "opacity": 0.2,
+                "speed": "4s"
+                },
+                "glitch": {
+                "enabled": true,
+                "intensity": "subtle",
+                "interval": "6s"
+                },
+                "glow": {
+                "enabled": true,
+                "blur": "12px",
+                "spread": "2px"
+                },
+                "glassmorphism": {
+                "enabled": true,
+                "blur": "8px",
+                "opacity": 0.75
+                },
+                "chromaticAberration": {
+                "enabled": true,
+                "offset": "2px"
+                }
+            }
         }
     },
     "social-ticker":{

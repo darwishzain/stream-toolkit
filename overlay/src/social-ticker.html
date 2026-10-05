@@ -4,20 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Ticker</title>
-    <script type="text/javascript" src="./lib/main.js"></script>
+    <script type="text/javascript" src="./lib/main.js" defer></script>
 </head>
 <body class="th-fg">
-    <div id="box" class="th-fg th-bg" 
-        style="
-            display:flex;
-            align-items:center;
-            padding:20px;
-            width:100%;
-            border-radius:4px;
-            "
-    >
-        <i id="icon" class="bi bi-heart-fill" style="font-size: 28px;"></i>
-        <span id="username" class="th-fg mx-1" style="font-weight: 600;">@YourUsername</span>
+    <div id="box" class="overlay-container th-fg th-bg" >
+        <i id="icon" class="overlay-icon th-accent-text bi bi-heart-fill" style="font-size: 28px;"></i>
+        <span id="username" class="overlay-text th-fg mx-1" style="font-weight: 600;">@YourUsername</span>
     </div>
     <script>
         function socialticker(){
@@ -49,7 +41,7 @@
                 index = (index + 1) % Object.values(config["social-ticker"].username).length;
 
                 const platform = Object.keys(config["social-ticker"].username)[index];
-                iconElement.className = socialicons.find(item => item[0] === platform)+" th-accent-text";
+                iconElement.className = "overlay-icon th-accent-text"+socialicons.find(item => item[0] === platform);
 
                 const username = Object.values(config["social-ticker"].username)[index];
                 usernameElement.innerText = '@' + username;

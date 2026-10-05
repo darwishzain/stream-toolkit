@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Box</title>
+    <script type="text/javascript" src="./lib/main.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div id="chatbox" class=""></div>
+    <script>
+        function chat(){
+            if(!config["chatbox"].twitchchannel)
+            {
+                errorMessage("Missing username for Twitch Chat.");
+                return;
+            }
+            const chatbox = document.getElementById('chatbox');
+            const socket = io();
+            socket.on('chatMessage', (data) => {
+                console.log("Received message:", data);
+                const { platform, user, color, message, avatar } = data;
+                const bubble = document.createElement('div');
+                bubble.className = 'overlay-bubble th-bg';
+                bubble.innerHTML = `
+                <div class="overlay-bubble-header th-accent-text">
+                    <i class="overlay-icon th-accent-text bi bi-${platform}"></i>
+                    <span class="overlay-label th-accent-text">${user}</span>
+                </div>
+                <div class="overlay-bubble-message th-fg">
+                    ${message}
+                </div>`;
+                chatbox.appendChild(bubble);
+                if (chatbox.children.length > 50) {
+                    chatbox.removeChild(chatbox.firstChild);
+                    console.log("message removed");
+                }
+                window.scrollTo(0, document.body.scrollHeight);
+            });
+        }
+    </script>
+</body>
+</html>

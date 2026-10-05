@@ -46,7 +46,7 @@ body {
 /* Slide Out to the right */
 @keyframes slideOut {
     from { transform: translateX(0); opacity: 1; }
-    to { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(-20px); opacity: 0; }
 }
 .tc-message{
     padding: 2px 5px;
@@ -62,11 +62,6 @@ body {
     color: var(--accent-color);
 }
 
-/* Smooth entry animation */
-@keyframes slideIn {
-    from { transform: translateX(-100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
 /**TRIGGER*/
 #alert-text {
     position: absolute;
@@ -122,4 +117,99 @@ body {
     max-width: 300px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     animation: fadeInUp 0.5s ease-out;
+}
+/* aesthetics */
+/* Base container structure */
+.overlay-container {
+    display: inline-flex;
+    width:max-content;
+    height:auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+/* Content layout wrapper */
+.overlay-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* Generic element slots */
+.overlay-icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+.overlay-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.overlay-text {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+.overlay-bubble {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    word-break: break-word; /* Prevents long URLs or spam from overflowing */
+}
+/* Chat Header (Badges + Username + Timestamp) */
+.overlay-bubble-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* Chat Body Text */
+.overlay-bubble-message {
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--th-fg);
+}
+/* Hologram preset targeting all generic containers */
+[data-aesthetic="hologram"] .overlay-container {
+    background: var(--th-bg-glass, rgba(11, 14, 20, 0.75));
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--th-accent);
+    box-shadow: 0 0 15px var(--th-glow);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hologram scanline effect */
+[data-aesthetic="hologram"] .overlay-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 50%,
+        rgba(0, 0, 0, 0.35) 51%
+    );
+    background-size: 100% 4px;
+    opacity: var(--th-scanline-opacity, 0.25);
+    pointer-events: none;
+}
+
+/* Hologram glow on generic icons and labels */
+[data-aesthetic="hologram"] .overlay-icon,
+[data-aesthetic="hologram"] .overlay-label {
+    text-shadow: 0 0 8px var(--th-glow);
+}
+[data-aesthetic="hologram"] .overlay-bubble {
+    background: var(--th-bg-glass, rgba(11, 14, 20, 0.65));
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 3px solid var(--th-accent); /* Optional left accent highlight */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }

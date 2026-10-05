@@ -29,62 +29,60 @@ function errorMessage(message, fix = null){
     `;
     body.prepend(error);
 }
+function setTheme(config){
+    const root = document.documentElement;
+    const {colors,typography,aesthetics} = config.theme;
+
+    root.setAttribute('th-theme',config.theme.id);
+    root.style.setProperty('--th-accent', colors.primary);
+    root.style.setProperty('--th-secondary', colors.secondary);
+    root.style.setProperty('--th-bg', colors.background);
+    root.style.setProperty('--th-fg', colors.text);
+    root.style.setProperty('--th-glow', colors.glow);
+    if (typography) {
+        root.style.setProperty('--th-font-family', typography.fontFamily);
+        root.style.setProperty('--th-font-size-base', typography.fontSizeBase);
+    }
+    root.setAttribute('data-aesthetic', aesthetics.preset);
+    const fx = aesthetics.effects;
+    if (!fx) return;
+    // Set CSS properties for fine-grained effect controls
+    if (fx.glow?.enabled) {
+        root.style.setProperty('--th-glow-blur', fx.glow.blur);
+    }
+
+    if (fx.scanlines?.enabled) {
+        root.style.setProperty('--th-scanline-opacity', fx.scanlines.opacity.toString());
+    }
+
+    if (fx.glassmorphism?.enabled) {
+        root.style.setProperty('--th-glass-blur', fx.glassmorphism.blur);
+        root.style.setProperty('--th-glass-opacity', fx.glassmorphism.opacity.toString());
+    }
+}
 config = null;
 async function initializeOverlay(){
     try{
         const confResponse = await fetch('/api/config');
         config = await confResponse.json();
         //Theme
-        const {colors,typography} = config.theme;
-        const root = document.documentElement;
-        root.setAttribute('th-theme',config.theme.id);
-        root.style.setProperty('--th-accent', colors.primary);
-        root.style.setProperty('--th-secondary', colors.secondary);
-        root.style.setProperty('--th-bg', colors.background);
-        root.style.setProperty('--th-fg', colors.text);
-        root.style.setProperty('--th-glow', colors.glow);
-        if (typography) {
-            root.style.setProperty('--th-font-family', typography.fontFamily);
-            root.style.setProperty('--th-font-size-base', typography.fontSizeBase);
-        }
-        //run functions if exist
-        if(typeof socialticker == "function")
-        {
-            if(!config['social-ticker'])
-            {
-                errorMessage("Missing configuration for Social Ticker.");
-                return;
+        setTheme(config);
+        //Function key mapping
+        const modules = [
+            { key: 'social-ticker', fn: typeof socialticker === 'function' ? socialticker : null },
+            { key: 'twitch-chat',   fn: typeof tmichat === 'function' ? tmichat : null },
+            { key: 'chatbox',       fn: typeof chat === 'function' ? chat : null },
+            { key: 'waving-flag',   fn: typeof wavingflag === 'function' ? wavingflag : null }
+        ];
+
+        for (const { key, fn } of modules) {
+            if (!fn) continue; // Skip if function isn't present in this HTML file
+            if (!config[key]) {
+                errorMessage(`Missing configuration for ${key}.`);
+                continue;
             }
-            socialticker();
+            fn();
         }
-        if (typeof tmichat === "function") {
-            if(!config["twitch-chat"])
-            {
-                errorMessage("Missing configuration for Twitch Chat.");
-                return;
-            }
-            tmichat();
-        }
-        if (typeof chat === "function")
-        {
-            if(!config["chatbox"])
-            {
-                errorMessage("Missing configuration for Chatbox.");
-                return;
-            }
-            chat();
-        }
-        if (typeof wavingflag === "function")
-        {
-            if(!config['waving-flag'])
-            {
-                errorMessage("Missing configuration for Waving Flag.");
-                return;
-            }
-            wavingflag();
-        }
-        //initcomfy
-        //initmission
     }
     catch(error)
     {

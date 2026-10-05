@@ -1,13 +1,15 @@
-### To use
+### Setup Configuration
 ```
-cp overlay.config.json.example overlay.config.json #Linux
+cp overlay.conf.example overlay.conf #Linux
+copy overlay.conf.example overlay.conf # Windows
 ```
 
 #### Overlays
  - [social-ticker](./social-ticker.html)
- - [twitch-chat](./twitch-chat.html)
+ - [chatbox](./chatbox.html)
  - [waving-flag](./waving-flag.html)
 
 ### Resources
 - [ComfyJS](https://github.com/instafluff/ComfyJS)
-- [tmi.js](https://tmijs.com/)
+- [tmi.JS](https://tmijs.com/)
+- [YouTube.JS](https://ytjs.dev/)

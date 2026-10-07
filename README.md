@@ -1,3 +1,5 @@
+## Overlays
+
 ### Setup Configuration
 ```
 cp overlay.conf.example overlay.conf #Linux
@@ -5,11 +7,20 @@ copy overlay.conf.example overlay.conf # Windows
 ```
 
 #### Overlays
- - [social-ticker](./social-ticker.html)
- - [chatbox](./chatbox.html)
- - [waving-flag](./waving-flag.html)
+ - [social-ticker](./overlay/social-ticker.html)
+ - [chatbox](./overlay/chatbox.html)
+ - [waving-flag](./overlay/waving-flag.html)
 
-### Resources
+## Resources
+### Overlay
 - [ComfyJS](https://github.com/instafluff/ComfyJS)
 - [tmi.JS](https://tmijs.com/)
 - [YouTube.JS](https://ytjs.dev/)
+### Music
+- [Riot Music](https://www.riotgames.com/en/riot-music-creator-safe-guidelines)
+- [streambeats](https://streambeats.com/)
+
+## Issues
+- Youtube Chat overlay not detecting channel is live
+- Redoing momentum and missions.
+- Working on extensions

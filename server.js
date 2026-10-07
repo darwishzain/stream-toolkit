@@ -15,7 +15,8 @@ const executionDir = isPackaged
     : __dirname;
 const CONFIG_PATH = isPackaged
     ? path.join(path.dirname(process.execPath), 'overlay.conf')
-    : path.join(__dirname, '../overlay.conf');
+    : path.join(__dirname, 'overlay.conf');
+
 const EXAMPLE_CONFIG_PATH = `${CONFIG_PATH}.example`;
 const homePath = path.join(__dirname, '.');
 const overlays = fs.readdirSync(homePath).filter(

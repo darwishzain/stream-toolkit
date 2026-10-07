@@ -2,20 +2,20 @@
   "name": "overlay",
   "version": "1.0.0",
   "description": "Live Streaming Overlay",
-  "main": "src/server.js",
+  "main": "overlay/server.js",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "build:exe": "pkg src/server.js --targets node18-win-x64 --output dist/chat-overlay.exe",
+    "build:exe": "pkg ./server.js --targets node18-win-x64 --output dist/overlay.exe",
     "test": "echo \"Error: no test specified\" && exit 1",
     "init": "cp overlay.conf.example overlay.conf",
-    "server": "node src/server.js",
-    "dev": "node --watch-path=./src --watch-path=./overlay.conf src/server.js"
+    "server": "node overlay/server.js",
+    "dev": "node --watch-path=./overlay --watch-path=./overlay.conf ./server.js"
   },
   "pkg": {
     "assets": [
-      "src/**/*",
+      "overlay/**/*",
       "overlay.conf"
     ],
     "outputPath": "dist"

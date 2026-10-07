@@ -16,16 +16,32 @@ const executionDir = isPackaged
 const CONFIG_PATH = isPackaged
     ? path.join(path.dirname(process.execPath), 'overlay.conf')
     : path.join(__dirname, '../overlay.conf');
+const EXAMPLE_CONFIG_PATH = `${CONFIG_PATH}.example`;
 const homePath = path.join(__dirname, '.');
-const overlays = fs.readdirSync(homePath).filter(file => file.endsWith('.html') && file !== 'index.html');
+const overlays = fs.readdirSync(homePath).filter(
+    file => file.endsWith('.html')
+    && file !== 'index.html'
+    && file !== 'edit.html');
 
 function loadConfig() {
+    if (!fs.existsSync(CONFIG_PATH)) {
+        try {
+            if (fs.existsSync(EXAMPLE_CONFIG_PATH)) {
+                fs.copyFileSync(EXAMPLE_CONFIG_PATH, CONFIG_PATH);
+                console.log('[Config] Created overlay.conf from overlay.conf.example');
+            } else {
+                console.warn('[Config] Example config file not found:', EXAMPLE_CONFIG_PATH);
+            }
+        } catch (err) {
+            console.error('[Config] Failed to create overlay.conf:', err);
+        }
+    }
     if (fs.existsSync(CONFIG_PATH)) {
         try {
             const raw = fs.readFileSync(CONFIG_PATH, 'utf-8');
             return JSON.parse(raw);
         } catch (err) {
-            console.error('Error parsing config.json:', err);
+            console.error('[Config] Error parsing config file:', err);
         }
     }
     return {};

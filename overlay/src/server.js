@@ -61,21 +61,37 @@ app.get('/api/config', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.json(config);
 });
-if (config.chatbox.twitchchannel) {
-    console.log(`[Twitch] Connected to channel: ${config.chatbox.twitchchannel}`);
-    const client = new tmiJS.Client({
-        channels: [config.chatbox.twitchchannel]
+function sendAlert(type, user, details, message = "") {
+    io.emit('overlay-alert', {
+        type,
+        user,
+        details,
+        message,
+        timestamp: Date.now()
     });
-    client.connect().catch(console.error);
-    client.on('message', (channel, tags, message, self) => {
-        io.emit('chatMessage', {
+}
+if(config.twitchchannel)
+{
+    ComfyJS.onConnected = (address, port) => {
+        console.log(`[Twitch] Successfully connected to Twitch chat @${config.twitchchannel} at ${address}:${port}`);
+    };
+    ComfyJS.onDisconnect = () => {
+        console.log("[Twitch] Disconnected from Twitch chat.");
+    };
+    ComfyJS.onChat = (user,message,flags,self,extra) => {
+        io.emit('chatMessage',{
             platform: 'twitch',
-            user: tags['display-name'] || tags.username,
-            color: tags.color || '#9146FF',
+            user: extra.displayName || user,
+            color: user.color || "#9146FF",
             message: message,
-            avatar:null
+            avatar: null
         });
-    });
+    }
+    ComfyJS.onSub = (user, msg, subTier) => sendAlert('sub', user, `Subscribed (${subTier.plan})`, msg);
+    ComfyJS.onResub = (user, msg, streak, total) => sendAlert('resub', user, `Resub x${total}`, msg);
+    ComfyJS.onRaid = (user, viewers) => sendAlert('raid', user, `Raid with ${viewers} viewers`);
+    ComfyJS.onReward = (user, title, cost, msg) => sendAlert('reward', user, `Redeemed: ${title}`, msg);
+    ComfyJS.Init(config.twitchchannel);
 }
 async function youtubeVideoId(youtubechannel){
     try{
@@ -149,7 +165,9 @@ server.listen(PORT, async () => {
     console.log(`  Dashboard:   ${localUrl}`);
     console.log(`  Overlays:`);
     console.log(`\t${overlays.join(',\n\t')}`);
-    console.log(`  Config File: ${CONFIG_PATH}`);
+    console.log(`  Config:`);
+    console.log(`\t${localUrl}/api/config`);
+    console.log(`\t${CONFIG_PATH}`);
     console.log(`==================================================\n`);
 });
 process.on('SIGINT', () => {
